@@ -6,9 +6,10 @@ import { row as rowStyle, cell as cellStyle, cellSize } from "./Grid2d.css";
 
 interface Props {
   grid: Grid;
+  orientation: "up" | "down" | "left" | "right";
 }
 
-export function Grid2d({ grid }: Props) {
+export function Grid2d({ grid, orientation }: Props) {
   return (
     <div>
       {partition(grid.cells, grid.width).map((row, i) => (
@@ -17,6 +18,7 @@ export function Grid2d({ grid }: Props) {
             <div
               className={cellStyle({
                 type: cell,
+                orientation,
               })}
               style={assignInlineVars({ [cellSize]: "25px" })}
               key={j}

@@ -16,6 +16,12 @@ export const cell = recipe({
     border: "1px solid white",
   },
   variants: {
+    orientation: {
+      up: {},
+      down: {},
+      left: {},
+      right: {},
+    },
     type: {
       room: {
         backgroundColor: "transparent",
@@ -31,6 +37,48 @@ export const cell = recipe({
       wall: {
         backgroundColor: "white",
       },
+      player: {
+        backgroundColor: "red",
+        border: 0,
+      },
     },
   },
+  compoundVariants: [
+    {
+      variants: {
+        type: "player",
+        orientation: "up",
+      },
+      style: {
+        boxShadow: "inset 0 -2px 0 0 cyan",
+      },
+    },
+    {
+      variants: {
+        type: "player",
+        orientation: "down",
+      },
+      style: {
+        boxShadow: "inset 0 2px 0 0 cyan",
+      },
+    },
+    {
+      variants: {
+        type: "player",
+        orientation: "left",
+      },
+      style: {
+        boxShadow: "inset -2px 0 0 0 cyan",
+      },
+    },
+    {
+      variants: {
+        type: "player",
+        orientation: "right",
+      },
+      style: {
+        boxShadow: "inset 2px 0 0 0 cyan",
+      },
+    },
+  ],
 });

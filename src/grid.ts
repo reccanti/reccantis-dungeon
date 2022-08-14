@@ -1,4 +1,4 @@
-export type Cell = "room" | "wall";
+export type Cell = "room" | "wall" | "player";
 
 export class Grid {
   readonly width: number;
@@ -33,6 +33,17 @@ export class Grid {
       return null;
     }
     return row * this.width + col;
+  }
+
+  getCell(row: number, col: number) {
+    const i = this.coordsToIndex(row, col);
+    if (i !== null) {
+      return this._cells[i];
+    } else {
+      throw Error(
+        `There's no cell at the following coordinates: row ${row}, col ${col}`
+      );
+    }
   }
 
   setCell(row: number, col: number, cell: Cell) {

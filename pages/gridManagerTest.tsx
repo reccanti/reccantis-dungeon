@@ -4,12 +4,30 @@ import styles from "../styles/Home.module.css";
 import { Grid2d } from "../src/components/Grid2d";
 import { PrimMaze, primMazeToGrid } from "../src/primMaze";
 import { useEffect, useMemo, useState } from "react";
+import { GridTraversalManager, Orientation } from "../src/gridTraversalManager";
+import { Grid } from "../src/grid";
+import { randomInRange } from "../src/util/randomInRange";
 
-// import { Grid as GridComponent } from "../src/components/Grid";
-// import { Grid } from "../src/grid";
+function findEmptyRoom(grid: Grid) {
+  while (true) {
+    const row = randomInRange(0, grid.height - 1);
+    const col = randomInRange(0, grid.width - 1);
+    const cell = grid.getCell(row, col);
+    if (cell === "room") {
+      return { row, col };
+    }
+  }
+}
 
 const GridTest: NextPage = () => {
   const [maze, setMaze] = useState<PrimMaze | null>(null);
+  const [gridManager, setGridManager] = useState<GridTraversalManager | null>(
+    null
+  );
+
+  const [orientation, setOrientation] = useState<Orientation>("up");
+  const [row, setRow] = useState<number>(0);
+  const [col, setCol] = useState<number>(0);
 
   useEffect(() => {
     setMaze(new PrimMaze(15, 15));
@@ -21,6 +39,26 @@ const GridTest: NextPage = () => {
     }
     return null;
   }, [maze]);
+
+  useEffect(() => {
+    if (grid) {
+      const { row, col } = findEmptyRoom(grid);
+      const manager = new GridTraversalManager(grid, row, col);
+      const listen = () => {
+        setRow(manager.row);
+        setCol(manager.col);
+        setOrientation(manager.orientation);
+      };
+      manager.addUpdateListener(listen);
+      window.addEventListener("keyup", manager.listen);
+      setGridManager(manager);
+
+      return () => {
+        manager.removeUpdateListener(listen);
+        window.removeEventListener("keyup", manager.listen);
+      };
+    }
+  }, [grid]);
 
   const handleClick = () => {
     setMaze(new PrimMaze(15, 15));
@@ -35,7 +73,9 @@ const GridTest: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        {grid && <Grid2d grid={grid} />}
+        {grid && gridManager && (
+          <Grid2d grid={grid} orientation={orientation} />
+        )}
         <button onClick={handleClick}>generate new maze</button>
       </main>
     </div>
