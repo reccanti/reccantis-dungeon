@@ -5,36 +5,36 @@ import { Grid, Cell, Property } from "../../grid";
 import { row as rowStyle, cell as cellStyle, cellSize } from "./Grid2d.css";
 import { useEffect, useMemo, useState } from "react";
 
-interface Props {
-  grid: Grid;
-}
+type StyleType = ReturnType<typeof assignInlineVars>;
 
-function WallTile() {
+function WallTile({ style }: { style: StyleType }) {
   return (
     <div
       className={cellStyle({
         type: "wall",
       })}
-      style={assignInlineVars({ [cellSize]: "25px" })}
+      style={style}
     ></div>
   );
 }
 
-function RoomTile() {
+function RoomTile({ style }: { style: StyleType }) {
   return (
     <div
       className={cellStyle({
         type: "room",
       })}
-      style={assignInlineVars({ [cellSize]: "25px" })}
+      style={style}
     ></div>
   );
 }
 
 function PlayerTile({
   orientation,
+  style,
 }: {
   orientation: "up" | "down" | "left" | "right";
+  style: StyleType;
 }) {
   return (
     <div
@@ -42,12 +42,12 @@ function PlayerTile({
         type: "player",
         orientation,
       })}
-      style={assignInlineVars({ [cellSize]: "25px" })}
+      style={style}
     ></div>
   );
 }
 
-function Tile({ cell }: { cell: Cell }) {
+function Tile({ cell, size }: { cell: Cell; size: number }) {
   const [property, setProperty] = useState<Property | null>(null);
 
   useEffect(() => {
@@ -57,7 +57,6 @@ function Tile({ cell }: { cell: Cell }) {
       // first, see if it's a player tile
       let property = properties.find((prop) => prop.type === "player");
       if (property) {
-        console.log("update...");
         setProperty({ ...property });
         return;
       }
@@ -81,24 +80,29 @@ function Tile({ cell }: { cell: Cell }) {
     return () => cell.removeListener(listen);
   }, [cell]);
 
-  return useMemo(() => {
-    if (!property) {
-      return <RoomTile />;
-    } else if (property.type === "player") {
-      return <PlayerTile orientation={property.orientation} />;
-    } else {
-      return <WallTile />;
-    }
-  }, [property]);
+  const style = assignInlineVars({ [cellSize]: `${size}px` });
+
+  if (!property) {
+    return <RoomTile style={style} />;
+  } else if (property.type === "player") {
+    return <PlayerTile style={style} orientation={property.orientation} />;
+  } else {
+    return <WallTile style={style} />;
+  }
 }
 
-export function Grid2d({ grid }: Props) {
+interface Props {
+  grid: Grid;
+  cellSize?: number;
+}
+
+export function Grid2d({ grid, cellSize = 50 }: Props) {
   return (
     <div>
       {partition(grid.cells, grid.width).map((row, i) => (
         <div className={rowStyle} key={i}>
           {row.map((cell, j) => (
-            <Tile cell={cell} key={`${i},${j}`} />
+            <Tile cell={cell} size={cellSize} key={`${i},${j}`} />
           ))}
         </div>
       ))}

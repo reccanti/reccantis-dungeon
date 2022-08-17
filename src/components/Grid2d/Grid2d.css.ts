@@ -38,7 +38,7 @@ export const cell = recipe({
         backgroundColor: "white",
       },
       player: {
-        backgroundColor: "red",
+        backgroundColor: "green",
         border: 0,
       },
     },
@@ -50,7 +50,7 @@ export const cell = recipe({
         orientation: "up",
       },
       style: {
-        boxShadow: "inset 0 -2px 0 0 cyan",
+        boxShadow: "inset 0 -4px 0 0 red",
       },
     },
     {
@@ -59,7 +59,7 @@ export const cell = recipe({
         orientation: "down",
       },
       style: {
-        boxShadow: "inset 0 2px 0 0 cyan",
+        boxShadow: "inset 0 4px 0 0 red",
       },
     },
     {
@@ -68,7 +68,7 @@ export const cell = recipe({
         orientation: "left",
       },
       style: {
-        boxShadow: "inset -2px 0 0 0 cyan",
+        boxShadow: "inset -4px 0 0 0 red",
       },
     },
     {
@@ -77,7 +77,7 @@ export const cell = recipe({
         orientation: "right",
       },
       style: {
-        boxShadow: "inset 2px 0 0 0 cyan",
+        boxShadow: "inset 4px 0 0 0 red",
       },
     },
   ],

@@ -8,7 +8,7 @@ import { GridTraversalManager, Orientation } from "../src/gridTraversalManager";
 import { Grid } from "../src/grid";
 import { randomInRange } from "../src/util/randomInRange";
 
-const GRID_SIZE = 15;
+const GRID_SIZE = 5;
 
 function findEmptyRoom(grid: Grid) {
   while (true) {
@@ -65,7 +65,7 @@ const GridTest: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        {grid && gridManager && <Grid2d grid={grid} />}
+        {grid && gridManager && <Grid2d grid={grid} cellSize={15} />}
         <button onClick={handleClick}>generate new maze</button>
       </main>
     </div>
