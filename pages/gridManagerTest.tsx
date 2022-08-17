@@ -8,12 +8,14 @@ import { GridTraversalManager, Orientation } from "../src/gridTraversalManager";
 import { Grid } from "../src/grid";
 import { randomInRange } from "../src/util/randomInRange";
 
+const GRID_SIZE = 15;
+
 function findEmptyRoom(grid: Grid) {
   while (true) {
     const row = randomInRange(0, grid.height - 1);
     const col = randomInRange(0, grid.width - 1);
     const cell = grid.getCell(row, col);
-    if (cell === "room") {
+    if (!cell.hasPropertyOfType("wall")) {
       return { row, col };
     }
   }
@@ -25,12 +27,8 @@ const GridTest: NextPage = () => {
     null
   );
 
-  const [orientation, setOrientation] = useState<Orientation>("up");
-  const [row, setRow] = useState<number>(0);
-  const [col, setCol] = useState<number>(0);
-
   useEffect(() => {
-    setMaze(new PrimMaze(15, 15));
+    setMaze(new PrimMaze(GRID_SIZE, GRID_SIZE));
   }, []);
 
   const grid = useMemo(() => {
@@ -44,24 +42,18 @@ const GridTest: NextPage = () => {
     if (grid) {
       const { row, col } = findEmptyRoom(grid);
       const manager = new GridTraversalManager(grid, row, col);
-      const listen = () => {
-        setRow(manager.row);
-        setCol(manager.col);
-        setOrientation(manager.orientation);
-      };
-      manager.addUpdateListener(listen);
+
       window.addEventListener("keyup", manager.listen);
       setGridManager(manager);
 
       return () => {
-        manager.removeUpdateListener(listen);
         window.removeEventListener("keyup", manager.listen);
       };
     }
   }, [grid]);
 
   const handleClick = () => {
-    setMaze(new PrimMaze(15, 15));
+    setMaze(new PrimMaze(GRID_SIZE, GRID_SIZE));
   };
 
   return (
@@ -73,9 +65,7 @@ const GridTest: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        {grid && gridManager && (
-          <Grid2d grid={grid} orientation={orientation} />
-        )}
+        {grid && gridManager && <Grid2d grid={grid} />}
         <button onClick={handleClick}>generate new maze</button>
       </main>
     </div>

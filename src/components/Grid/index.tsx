@@ -1,4 +1,4 @@
-import { Grid as GridClass, Cell as CellType } from "../../grid";
+import { Grid as GridClass, CellType } from "../../grid";
 import { row as rowStyle, cell as cellStyle, cellContainer } from "./Grid.css";
 import { partition } from "../../util/partition";
 
@@ -62,7 +62,7 @@ export function Grid({ grid }: Props) {
         <div className={rowStyle} key={i}>
           {row.map((cell, j) => (
             <div key={j}>
-              <Cell type={cell} />
+              <Cell type={cell.type} />
             </div>
           ))}
         </div>

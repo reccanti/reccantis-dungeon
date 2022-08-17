@@ -1,4 +1,5 @@
-import { Grid } from "./grid";
+import { cell } from "./components/Grid/Grid.css";
+import { Cell, Grid } from "./grid";
 import { shuffle } from "./util/shuffle";
 /**
  * The maze generator!
@@ -132,7 +133,9 @@ export function primMazeToGrid(maze: PrimMaze) {
 
     for (let i = 0; i < grid.width; i++) {
       for (let j = 0; j < grid.height; j++) {
-        grid.setCell(i, j, "wall");
+        const cell = grid.getCell(i, j);
+        cell.addProperty({ type: "wall" });
+        // grid.setCell(i, j, new Cell("wall"));
       }
     }
 
@@ -177,20 +180,23 @@ export function primMazeToGrid(maze: PrimMaze) {
   const grid = generateGrid();
 
   // iterate through each room and determine whether to add a wall or not
-  cells.forEach((cell) => {
+  cells.forEach((cellIndex) => {
     // first, mark the current cell as a room
-    const { row, col } = cellToCoords(cell);
-    grid.setCell(row, col, "room");
+    const { row, col } = cellToCoords(cellIndex);
+    const cell = grid.getCell(row, col);
+    cell.removePropertiesOfType("wall");
 
-    const next = getNextInRow(cell);
-    const above = getCellAbove(cell);
+    const next = getNextInRow(cellIndex);
+    const above = getCellAbove(cellIndex);
 
-    if (next !== null && !maze.hasWall(cell, next)) {
-      grid.setCell(row, col + 1, "room");
+    if (next !== null && !maze.hasWall(cellIndex, next)) {
+      const cell = grid.getCell(row, col + 1);
+      cell.removePropertiesOfType("wall");
     }
 
-    if (above !== null && !maze.hasWall(cell, above)) {
-      grid.setCell(row - 1, col, "room");
+    if (above !== null && !maze.hasWall(cellIndex, above)) {
+      const cell = grid.getCell(row - 1, col);
+      cell.removePropertiesOfType("wall");
     }
   });
 

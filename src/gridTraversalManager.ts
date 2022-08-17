@@ -33,7 +33,8 @@ export class GridTraversalManager {
   }
 
   canMove(cell: Cell) {
-    return cell !== "wall";
+    // return cell.type !== "wall";
+    return !cell.hasPropertyOfType("wall");
   }
 
   moveForward() {
@@ -60,7 +61,13 @@ export class GridTraversalManager {
     }
     const cell = this.grid.getCell(newRow, newCol);
     if (this.canMove(cell)) {
-      this.grid.setCell(this.row, this.col, "room");
+      const curCell = this.grid.getCell(this.row, this.col);
+      curCell.removePropertiesOfType("player");
+      // console.log(cell);
+
+      // const cell = this.grid.getCell(this.row, this.col);
+      // cell.type === "room";
+      // this.grid.setCell(this.row, this.col, new Cell("room"));
       this.setRow(newRow);
       this.setCol(newCol);
       this.updateGrid();
@@ -91,7 +98,9 @@ export class GridTraversalManager {
     }
     const cell = this.grid.getCell(newRow, newCol);
     if (this.canMove(cell)) {
-      this.grid.setCell(this.row, this.col, "room");
+      // this.grid.setCell(this.row, this.col, new Cell("room"));
+      const curCell = this.grid.getCell(this.row, this.col);
+      curCell.removePropertiesOfType("player");
       this.setRow(newRow);
       this.setCol(newCol);
       this.updateGrid();
@@ -143,7 +152,16 @@ export class GridTraversalManager {
   }
 
   updateGrid() {
-    this.grid.setCell(this.row, this.col, "player");
+    // this.grid.setCell(this.row, this.col, new Cell("player"));
+    const cell = this.grid.getCell(this.row, this.col);
+    const curPlayerProps = cell.getPropertiesOfType("player");
+    cell.addProperty({
+      type: "player",
+      orientation: this.orientation,
+    });
+    curPlayerProps.forEach((prop) => {
+      cell.removeProperty(prop);
+    });
     this.callbacks.forEach((cb) => {
       cb();
     });

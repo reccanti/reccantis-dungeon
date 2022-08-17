@@ -13,7 +13,7 @@ export const cell = recipe({
     width: fallbackVar(cellSize, "50px"),
     height: fallbackVar(cellSize, "50px"),
     display: "block",
-    border: "1px solid white",
+    // border: "1px solid white",
   },
   variants: {
     orientation: {
