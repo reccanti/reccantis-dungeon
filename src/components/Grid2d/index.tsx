@@ -3,7 +3,7 @@ import { assignInlineVars } from "@vanilla-extract/dynamic";
 import { partition } from "../../util/partition";
 import { Grid, Cell, Property } from "../../grid";
 import { row as rowStyle, cell as cellStyle, cellSize } from "./Grid2d.css";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 type StyleType = ReturnType<typeof assignInlineVars>;
 
