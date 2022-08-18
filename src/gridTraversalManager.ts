@@ -2,13 +2,32 @@ import { Grid, Cell } from "./grid";
 
 export type Orientation = "up" | "down" | "left" | "right";
 
+interface BaseGridUpdate {
+  type: string;
+}
+
+interface OrientationChange extends BaseGridUpdate {
+  type: "OrientationChange";
+  direction: "clockwise" | "counterclockwise";
+}
+
+interface PositionChange extends BaseGridUpdate {
+  type: "PositionChange";
+  row: number;
+  col: number;
+}
+
+type GridUpdate = OrientationChange | PositionChange;
+
+type GridUpdateCallback = (update: GridUpdate) => void;
+
 export class GridTraversalManager {
   readonly grid: Grid;
   readonly row: number;
   readonly col: number;
   readonly orientation: Orientation = "up";
 
-  private callbacks = new Set<Function>();
+  private callbacks = new Set<GridUpdateCallback>();
 
   constructor(grid: Grid, startingRow: number, startingCol: number) {
     this.grid = grid;
@@ -71,6 +90,13 @@ export class GridTraversalManager {
       this.setRow(newRow);
       this.setCol(newCol);
       this.updateGrid();
+      this.callbacks.forEach((cb) => {
+        cb({
+          type: "PositionChange",
+          row: newRow,
+          col: newCol,
+        });
+      });
     }
   }
 
@@ -104,6 +130,13 @@ export class GridTraversalManager {
       this.setRow(newRow);
       this.setCol(newCol);
       this.updateGrid();
+      this.callbacks.forEach((cb) => {
+        cb({
+          type: "PositionChange",
+          row: newRow,
+          col: newCol,
+        });
+      });
     }
   }
 
@@ -127,6 +160,12 @@ export class GridTraversalManager {
       }
     }
     this.updateGrid();
+    this.callbacks.forEach((cb) => {
+      cb({
+        type: "OrientationChange",
+        direction: "counterclockwise",
+      });
+    });
   }
 
   rotateClockwise() {
@@ -149,6 +188,12 @@ export class GridTraversalManager {
       }
     }
     this.updateGrid();
+    this.callbacks.forEach((cb) => {
+      cb({
+        type: "OrientationChange",
+        direction: "clockwise",
+      });
+    });
   }
 
   updateGrid() {
@@ -162,15 +207,12 @@ export class GridTraversalManager {
     curPlayerProps.forEach((prop) => {
       cell.removeProperty(prop);
     });
-    this.callbacks.forEach((cb) => {
-      cb();
-    });
   }
 
-  addUpdateListener(callback: Function) {
+  addUpdateListener(callback: GridUpdateCallback) {
     this.callbacks.add(callback);
   }
-  removeUpdateListener(callback: Function) {
+  removeUpdateListener(callback: GridUpdateCallback) {
     this.callbacks.delete(callback);
   }
 

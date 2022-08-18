@@ -1,4 +1,7 @@
-import { createVar, style } from "@vanilla-extract/css";
+import { createVar, style, keyframes } from "@vanilla-extract/css";
+import { recipe } from "@vanilla-extract/recipes";
+
+export const ANIMATION_DURATION = 300;
 
 // viewport layer - the frame that "displays" the 3D grid
 
@@ -40,10 +43,41 @@ export const tile = style({
 });
 
 // rotation layer - rotates the grid based on the orientation
+// const rotateAnim = keyframes({
+//   from
+// })
 
 export const rotation = createVar();
 export const rotate = style({
-  transform: `rotate(${rotation})`,
+  transition: `transform ${ANIMATION_DURATION / 1000}s linear`,
   width: "100%",
   height: "100%",
+  transform: `rotate(${rotation})`,
 });
+// export const rotate = recipe({
+//   base: {
+//     // transform: `rotate(${rotation})`,
+//     transition: "transform 0.5s linear",
+//     width: "100%",
+//     height: "100%",
+//   },
+//   variants: {
+//     direction: {
+//       up: {
+//         transform: `rotate(360deg)`,
+//       },
+//       down: {
+//         transform: `rotate(180deg)`,
+//       },
+//       left: {
+//         transform: `rotate(270deg)`,
+//       },
+//       right: {
+//         transform: `rotate(90deg)`,
+//       },
+//     },
+//   },
+//   defaultVariants: {
+//     direction: "up",
+//   },
+// });

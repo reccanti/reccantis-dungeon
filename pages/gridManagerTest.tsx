@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Head from "next/head";
+import { throttle } from "throttle-typescript";
 
 import stylesCss from "../styles/Home.module.css";
 import { Grid2d } from "../src/components/Grid2d";
@@ -14,6 +15,7 @@ import {
   Layout,
   Column,
 } from "../src/components/WeirdLayoutStuffIllProbablyDeleteLater/Layout";
+import { ANIMATION_DURATION } from "../src/components/Grid3d/Grid3d.css";
 
 const GRID_SIZE = 5;
 
@@ -36,6 +38,8 @@ const GridTest: NextPage = () => {
     null
   );
 
+  const [orientation, setOrientation] = useState<number>(0);
+
   useEffect(() => {
     setMaze(new PrimMaze(GRID_SIZE, GRID_SIZE));
   }, []);
@@ -52,14 +56,35 @@ const GridTest: NextPage = () => {
       const { row, col } = findEmptyRoom(grid);
       const manager = new GridTraversalManager(grid, row, col);
 
-      window.addEventListener("keyup", manager.listen);
+      const listen = throttle(manager.listen, ANIMATION_DURATION);
+
+      window.addEventListener("keydown", listen);
       setGridManager(manager);
 
       return () => {
-        window.removeEventListener("keyup", manager.listen);
+        window.removeEventListener("keydown", listen);
       };
     }
   }, [grid]);
+
+  useEffect(() => {
+    if (gridManager) {
+      const listen: Parameters<typeof gridManager.addUpdateListener>[0] = (
+        update
+      ) => {
+        if (update.type === "OrientationChange") {
+          if (update.direction === "clockwise") {
+            setOrientation((curOrientation) => curOrientation + 90);
+          } else {
+            setOrientation((curOrientation) => curOrientation - 90);
+          }
+        }
+      };
+
+      gridManager.addUpdateListener(listen);
+      return () => gridManager.removeUpdateListener(listen);
+    }
+  }, [gridManager]);
 
   const handleClick = () => {
     setMaze(new PrimMaze(GRID_SIZE, GRID_SIZE));
@@ -78,7 +103,7 @@ const GridTest: NextPage = () => {
           <Layout columns={2}>
             <Column>
               <Box>
-                <Grid3d />
+                <Grid3d orientation={orientation} />
               </Box>
             </Column>
             <Column>

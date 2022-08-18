@@ -16,7 +16,8 @@
     "@vanilla-extract/recipes": "^0.2.5",
     "next": "12.2.5",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "throttle-typescript": "^1.1.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",

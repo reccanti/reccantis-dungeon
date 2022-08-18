@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 
 import { partition } from "../../util/partition";
@@ -97,15 +98,16 @@ interface Props {
 }
 
 export function Grid2d({ grid, cellSize = 50 }: Props) {
-  return (
-    <div>
-      {partition(grid.cells, grid.width).map((row, i) => (
+  const children = useMemo(
+    () =>
+      partition(grid.cells, grid.width).map((row, i) => (
         <div className={rowStyle} key={i}>
           {row.map((cell, j) => (
             <Tile cell={cell} size={cellSize} key={`${i},${j}`} />
           ))}
         </div>
-      ))}
-    </div>
+      )),
+    []
   );
+  return <div>{children}</div>;
 }

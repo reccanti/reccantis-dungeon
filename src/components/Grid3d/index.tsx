@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import {
   // viewport stuff
   viewportHeight,
@@ -19,6 +21,7 @@ import {
   rotate,
 } from "./Grid3d.css";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
+import { Orientation } from "../../gridTraversalManager";
 
 // Tile
 
@@ -40,30 +43,39 @@ function Tile({ row, col }: TileProps) {
 interface GridProps {
   width?: number;
   height?: number;
+  orientation: number;
 }
 
-export function Grid3d({ width = 500, height = 500 }: GridProps) {
+export function Grid3d({ width = 500, height = 500, orientation }: GridProps) {
   const style = assignInlineVars({
     [viewportHeight]: `${height}px`,
     [viewportWidth]: `${width}px`,
-    [rotation]: `0deg`,
+    [rotation]: `${orientation}deg`,
     [gridRows]: `${3}`,
     [gridCols]: `${3}`,
   });
+
+  const tiles = useMemo(
+    () => (
+      <>
+        <Tile row={0} col={0} />
+        <Tile row={0} col={1} />
+        <Tile row={0} col={2} />
+        <Tile row={1} col={0} />
+        <Tile row={1} col={1} />
+        <Tile row={1} col={2} />
+        <Tile row={2} col={0} />
+        <Tile row={2} col={1} />
+        <Tile row={2} col={2} />
+      </>
+    ),
+    []
+  );
+
   return (
     <div className={viewport} style={style}>
       <div className={rotate}>
-        <div className={tileWrapper}>
-          <Tile row={0} col={0} />
-          <Tile row={0} col={1} />
-          <Tile row={0} col={2} />
-          <Tile row={1} col={0} />
-          <Tile row={1} col={1} />
-          <Tile row={1} col={2} />
-          <Tile row={2} col={0} />
-          <Tile row={2} col={1} />
-          <Tile row={2} col={2} />
-        </div>
+        <div className={tileWrapper}>{tiles}</div>
       </div>
     </div>
   );
