@@ -107,7 +107,7 @@ export function Grid2d({ grid, cellSize = 50 }: Props) {
           ))}
         </div>
       )),
-    []
+    [grid]
   );
   return <div>{children}</div>;
 }

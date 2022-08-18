@@ -38,7 +38,9 @@ const GridTest: NextPage = () => {
     null
   );
 
-  const [orientation, setOrientation] = useState<number>(0);
+  const [orientation, setOrientation] = useState<number>(180);
+  const [row, setRow] = useState<number>(0);
+  const [col, setCol] = useState<number>(0);
 
   useEffect(() => {
     setMaze(new PrimMaze(GRID_SIZE, GRID_SIZE));
@@ -60,6 +62,8 @@ const GridTest: NextPage = () => {
 
       window.addEventListener("keydown", listen);
       setGridManager(manager);
+      setCol(manager.col);
+      setRow(manager.row);
 
       return () => {
         window.removeEventListener("keydown", listen);
@@ -74,10 +78,14 @@ const GridTest: NextPage = () => {
       ) => {
         if (update.type === "OrientationChange") {
           if (update.direction === "clockwise") {
-            setOrientation((curOrientation) => curOrientation + 90);
-          } else {
             setOrientation((curOrientation) => curOrientation - 90);
+          } else {
+            setOrientation((curOrientation) => curOrientation + 90);
           }
+        }
+        if (update.type === "PositionChange") {
+          setRow(update.row);
+          setCol(update.col);
         }
       };
 
@@ -103,7 +111,12 @@ const GridTest: NextPage = () => {
           <Layout columns={2}>
             <Column>
               <Box>
-                <Grid3d orientation={orientation} />
+                <Grid3d
+                  grid={grid}
+                  curRow={row}
+                  curCol={col}
+                  orientation={orientation}
+                />
               </Box>
             </Column>
             <Column>
