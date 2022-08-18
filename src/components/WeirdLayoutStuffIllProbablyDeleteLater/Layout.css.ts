@@ -12,5 +12,5 @@ export const layout = style({
 export const column = style({
   display: "flex",
   flexDirection: "column",
-  alignItems: "center",
+  justifyContent: "center",
 });

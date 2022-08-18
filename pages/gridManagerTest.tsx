@@ -3,6 +3,7 @@ import Head from "next/head";
 
 import stylesCss from "../styles/Home.module.css";
 import { Grid2d } from "../src/components/Grid2d";
+import { Grid3d } from "../src/components/Grid3d";
 import { PrimMaze, primMazeToGrid } from "../src/primMaze";
 import { useEffect, useMemo, useState } from "react";
 import { GridTraversalManager, Orientation } from "../src/gridTraversalManager";
@@ -76,7 +77,9 @@ const GridTest: NextPage = () => {
         {grid && gridManager && (
           <Layout columns={2}>
             <Column>
-              <Box>Hello!</Box>
+              <Box>
+                <Grid3d />
+              </Box>
             </Column>
             <Column>
               <Box>
