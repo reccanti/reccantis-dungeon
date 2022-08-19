@@ -18,7 +18,7 @@ import {
 } from "../src/components/WeirdLayoutStuffIllProbablyDeleteLater/Layout";
 import { ANIMATION_DURATION } from "../src/components/Grid3d/Grid3d.css";
 
-const GRID_SIZE = 20;
+const GRID_SIZE = 10;
 
 function findEmptyRoom(grid: Grid) {
   while (true) {

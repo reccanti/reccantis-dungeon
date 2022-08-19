@@ -1,4 +1,4 @@
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useEffect, useReducer } from "react";
 
 import {
   // viewport stuff
@@ -107,6 +107,88 @@ export function Tile3d({ row, col, type }: TileProps) {
 }
 
 // VisibleGrid - only displays a portion of the grid so we aren't making a bajillion elements
+type TileCache = Record<string, ReactNode>;
+type TileReducerActions =
+  | { type: "init" }
+  | {
+      type: "move";
+      row: number;
+      col: number;
+      grid: Grid;
+      drawDistance: number;
+      cachedDistance: number;
+    };
+
+const initialState: TileCache = {};
+
+function tileReducer(state: TileCache, action: TileReducerActions) {
+  switch (action.type) {
+    case "init": {
+      return initialState;
+    }
+    case "move": {
+      const newState: TileCache = {};
+      const { row, col, drawDistance, cachedDistance, grid } = action;
+
+      const minCol = col - drawDistance - cachedDistance;
+      const maxCol = col + drawDistance + cachedDistance + 1;
+      const minRow = row - drawDistance - cachedDistance;
+      const maxRow = row + drawDistance + cachedDistance + 1;
+
+      // let tiles: ReactNode[] = [];
+      for (let i = minRow; i < maxRow; i++) {
+        for (let j = minCol; j < maxCol; j++) {
+          const key = `${i},${j}`;
+          if (state[key]) {
+            newState[key] = state[key];
+          } else {
+            if (i < 0 || i >= grid.height || j < 0 || j >= grid.width) {
+              newState[key] = <Tile key={key} type="wall" row={i} col={j} />;
+            } else {
+              newState[key] = (
+                <Tile
+                  key={key}
+                  type={
+                    grid.getCell(i, j).hasPropertyOfType("wall")
+                      ? "wall"
+                      : "room"
+                  }
+                  row={i}
+                  col={j}
+                />
+              );
+            }
+          }
+        }
+      }
+      return newState;
+    }
+  }
+  return state;
+}
+
+function getVisibleTilesFromCache(
+  cache: TileCache,
+  row: number,
+  col: number,
+  drawDistance: number
+) {
+  const minCol = col - drawDistance;
+  const maxCol = col + drawDistance;
+  const minRow = row - drawDistance;
+  const maxRow = row + drawDistance;
+
+  const tiles: ReactNode[] = [];
+  for (let i = minRow; i <= maxRow; i++) {
+    for (let j = minCol; j <= maxCol; j++) {
+      const key = `${i},${j}`;
+      const tile = cache[key] as ReactNode;
+      tiles.push(tile);
+    }
+  }
+
+  return tiles;
+}
 
 interface VisibleGridProps {
   curRow: number;
@@ -123,30 +205,25 @@ function VisibleGrid({
   drawDistance,
   cachedDistance,
 }: VisibleGridProps) {
-  const minCol = curCol - drawDistance - cachedDistance;
-  const maxCol = curCol + drawDistance + cachedDistance;
-  const minRow = curRow - drawDistance - cachedDistance;
-  const maxRow = curRow + drawDistance + cachedDistance;
+  const [cache, dispatch] = useReducer(tileReducer, initialState);
 
-  let tiles: ReactNode[] = [];
-  for (let i = minRow; i < maxRow; i++) {
-    for (let j = minCol; j < maxCol; j++) {
-      if (i < 0 || i >= grid.height || j < 0 || j >= grid.width) {
-        tiles.push(<Tile key={`${i},${j}`} type="wall" row={i} col={j} />);
-      } else {
-        tiles.push(
-          <Tile3d
-            key={`${i},${j}`}
-            type={
-              grid.getCell(i, j).hasPropertyOfType("wall") ? "wall" : "room"
-            }
-            row={i}
-            col={j}
-          />
-        );
-      }
-    }
-  }
+  useEffect(() => {
+    dispatch({ type: "init" });
+  }, [grid]);
+
+  useEffect(() => {
+    dispatch({
+      type: "move",
+      row: curRow,
+      col: curCol,
+      grid,
+      drawDistance,
+      cachedDistance,
+    });
+  }, [grid, curRow, curCol]);
+
+  const tiles = getVisibleTilesFromCache(cache, curRow, curCol, drawDistance);
+
   return <div className={translate}>{tiles}</div>;
 }
 
@@ -179,46 +256,26 @@ export function Grid3d({
     [curColVar]: `${curCol}`,
   });
 
-  // const tiles = useMemo(() => {
-  //   const tiles: ReactNode[] = [];
-  //   for (let i = 0; i < grid.height; i++) {
-  //     for (let j = 0; j < grid.width; j++) {
-  //       tiles.push(
-  //         <Tile
-  //           key={`${i},${j}`}
-  //           type={
-  //             grid.getCell(i, j).hasPropertyOfType("wall") ? "wall" : "room"
-  //           }
-  //           row={i}
-  //           col={j}
-  //         />
-  //       );
-  //     }
-  //   }
-  //   return tiles;
-  // }, [grid]);
-
   return (
     <>
       <div className={viewport} style={style}>
         <div className={centerIndicator}></div>
-        <div className={perspectiveWrapper}>
-          <div className={perspective}>
-            <div className={rotateOffset}>
-              <div className={rotate}>
-                <VisibleGrid
-                  curCol={curCol}
-                  curRow={curRow}
-                  grid={grid}
-                  drawDistance={3}
-                  cachedDistance={1}
-                />
-                {/* <div className={translate}> */}
-                {/* <div className={tileWrapper}>{tiles}</div> */}
-              </div>
-            </div>
+        {/* <div className={perspectiveWrapper}>
+          <div className={perspective}> */}
+
+        <div className={rotateOffset}>
+          <div className={rotate}>
+            <VisibleGrid
+              curCol={curCol}
+              curRow={curRow}
+              grid={grid}
+              drawDistance={2}
+              cachedDistance={1}
+            />
           </div>
         </div>
+        {/* </div>
+        </div> */}
       </div>
     </>
   );
