@@ -138,7 +138,7 @@ export const rotateOffset = style({
   height: `calc(${gridRows} * ${TILE_SIZE} + ${TILE_SIZE})`,
   top: "50%",
   left: "50%",
-  transform: `translate(-50%, calc(-50% - ${TILE_SIZE} / 2))`,
+  transform: `translate(-50%, -50%)`,
   position: "absolute",
   transformStyle: "preserve-3d",
 });
