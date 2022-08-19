@@ -16,16 +16,22 @@ import {
   gridRows,
   gridCols,
 
+  // translation stuff
+  translate,
+  curCol as curColVar,
+  curRow as curRowVar,
+
   // rotation stuff
   rotation,
   rotate,
   rotateOffset,
 
+  // perspective stuff
+  perspective,
+
   // utils
   centerIndicator,
-  translate,
-  curCol as curColVar,
-  curRow as curRowVar,
+  perspectiveWrapper,
 } from "./Grid3d.css";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import { Grid } from "../../grid";
@@ -88,6 +94,7 @@ export function Grid3d({
       for (let j = 0; j < grid.width; j++) {
         tiles.push(
           <Tile
+            key={`${i},${j}`}
             type={
               grid.getCell(i, j).hasPropertyOfType("wall") ? "wall" : "room"
             }
@@ -101,15 +108,21 @@ export function Grid3d({
   }, [grid]);
 
   return (
-    <div className={viewport} style={style}>
-      <div className={centerIndicator}></div>
-      <div className={rotateOffset}>
-        <div className={rotate}>
-          <div className={translate}>
-            <div className={tileWrapper}>{tiles}</div>
+    <>
+      <div className={viewport} style={style}>
+        <div className={centerIndicator}></div>
+        <div className={perspectiveWrapper}>
+          <div className={perspective}>
+            <div className={rotateOffset}>
+              <div className={rotate}>
+                <div className={translate}>
+                  <div className={tileWrapper}>{tiles}</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

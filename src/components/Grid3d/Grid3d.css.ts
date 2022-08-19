@@ -86,6 +86,25 @@ export const translate = style({
   )`,
 });
 
+// perspective layer - makes it all 3D and junk
+
+export const perspectiveWrapper = style({
+  imageRendering: "crisp-edges",
+  position: "absolute",
+  perspective: "600px",
+  top: "50%",
+  left: "50%",
+});
+
+export const perspective = style({
+  transform: `
+    translateY(calc(${TILE_SIZE} / 2))
+    rotateX(90deg)
+    translateY(550px)
+  `,
+  transformStyle: "preserve-3d",
+});
+
 // center layer - helper to determine where the center of the grid is
 
 export const centerIndicator = style({

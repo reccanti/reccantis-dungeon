@@ -90,6 +90,22 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
+        <div
+          style={{
+            position: "relative",
+            perspective: "600px",
+          }}
+        >
+          <div
+            style={{
+              width: "100px",
+              height: "100px",
+              backgroundColor: "red",
+              transformStyle: "preserve-3d",
+              transform: "translateY(50px) rotateX(90deg) translateZ(100px)",
+            }}
+          ></div>
+        </div>
         {/* {maze && (
           <pre>
             {printMaze(maze)
