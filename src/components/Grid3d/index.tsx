@@ -11,6 +11,8 @@ import {
   tileRow,
   tileCol,
   tileWrapper,
+  tile3d,
+  tileFace,
 
   // grid sizing stuff
   gridRows,
@@ -28,10 +30,10 @@ import {
 
   // perspective stuff
   perspective,
+  perspectiveWrapper,
 
   // utils
   centerIndicator,
-  perspectiveWrapper,
 } from "./Grid3d.css";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 import { Grid } from "../../grid";
@@ -56,6 +58,51 @@ function Tile({ row, col, type }: TileProps) {
       })}
       style={style}
     ></div>
+  );
+}
+
+export function Tile3d({ row, col, type }: TileProps) {
+  const style = assignInlineVars({
+    [tileRow]: row.toString(),
+    [tileCol]: col.toString(),
+  });
+  return (
+    <div className={tile3d} style={style}>
+      <div
+        className={tileFace({
+          direction: "front",
+          opacity: type === "wall" ? "opaque" : "transparent",
+        })}
+      ></div>
+      <div
+        className={tileFace({
+          direction: "back",
+          opacity: type === "wall" ? "opaque" : "transparent",
+        })}
+      ></div>
+      <div
+        className={tileFace({
+          direction: "left",
+          opacity: type === "wall" ? "opaque" : "transparent",
+        })}
+      ></div>
+      <div
+        className={tileFace({
+          direction: "right",
+          opacity: type === "wall" ? "opaque" : "transparent",
+        })}
+      ></div>
+      <div
+        className={tileFace({
+          direction: "top",
+        })}
+      ></div>
+      <div
+        className={tileFace({
+          direction: "bottom",
+        })}
+      ></div>
+    </div>
   );
 }
 
@@ -93,7 +140,7 @@ export function Grid3d({
     for (let i = 0; i < grid.height; i++) {
       for (let j = 0; j < grid.width; j++) {
         tiles.push(
-          <Tile
+          <Tile3d
             key={`${i},${j}`}
             type={
               grid.getCell(i, j).hasPropertyOfType("wall") ? "wall" : "room"

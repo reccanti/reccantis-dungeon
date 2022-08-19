@@ -2,6 +2,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { useEffect, useState } from "react";
+import { Tile3d } from "../src/components/Grid3d";
 
 /**
  * Utlities
@@ -92,6 +93,24 @@ const Home: NextPage = () => {
       <main className={styles.main}>
         <div
           style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            perspective: "500px",
+            transformStyle: "preserve-3d",
+          }}
+        >
+          <div
+            style={{
+              transform: "rotateX(45deg)",
+            }}
+          >
+            <Tile3d row={0} col={0} type="wall" />
+          </div>
+        </div>
+        {/* <div
+          style={{
             position: "relative",
             perspective: "600px",
           }}
@@ -105,7 +124,7 @@ const Home: NextPage = () => {
               transform: "translateY(50px) rotateX(90deg) translateZ(100px)",
             }}
           ></div>
-        </div>
+        </div> */}
         {/* {maze && (
           <pre>
             {printMaze(maze)

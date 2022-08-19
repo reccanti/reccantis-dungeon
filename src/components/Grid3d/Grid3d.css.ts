@@ -27,6 +27,8 @@ export const tileWrapper = style({
   position: "relative",
   width: `calc(${gridCols} * ${TILE_SIZE})`,
   height: `calc(${gridRows} * ${TILE_SIZE})`,
+  transformStyle: "preserve-3d",
+  transform: `translateZ(calc(${TILE_SIZE} / 2))`,
 });
 
 export const tileRow = createVar();
@@ -53,6 +55,74 @@ export const tile = recipe({
   },
 });
 
+export const tile3d = style({
+  position: "absolute",
+  top: `calc(${TILE_SIZE} * ${tileRow})`,
+  left: `calc(${TILE_SIZE} * ${tileCol})`,
+  transformStyle: "preserve-3d",
+});
+
+export const tileFace = recipe({
+  base: {
+    width: TILE_SIZE,
+    height: TILE_SIZE,
+    position: "absolute",
+    backfaceVisibility: "hidden",
+    border: "1px solid white",
+  },
+  variants: {
+    opacity: {
+      transparent: {
+        display: "none",
+      },
+      opaque: {
+        backgroundColor: "black",
+      },
+    },
+    direction: {
+      front: {
+        transform: `
+          rotateX(90deg)
+          translateZ(calc(${TILE_SIZE} / 2))
+        `,
+      },
+      back: {
+        transform: `
+          rotateX(-90deg)
+          translateZ(calc(${TILE_SIZE} / 2))
+        `,
+      },
+      left: {
+        transform: `
+          rotateY(90deg)
+          translateZ(calc(${TILE_SIZE} / 2))
+        `,
+      },
+      right: {
+        transform: `
+          rotateY(270deg)
+          translateZ(calc(${TILE_SIZE} / 2))
+        `,
+      },
+      top: {
+        transform: `
+          rotateX(180deg)
+          translateZ(calc(-${TILE_SIZE} / 2))
+        `,
+      },
+      bottom: {
+        transform: `
+          rotateX(0deg)
+          translateZ(calc(-${TILE_SIZE} / 2))
+        `,
+      },
+    },
+  },
+  defaultVariants: {
+    opacity: "opaque",
+  },
+});
+
 // rotation layer - rotates the grid based on the orientation
 
 export const rotation = createVar();
@@ -61,6 +131,7 @@ export const rotate = style({
   width: "100%",
   height: "100%",
   transform: `rotate(${rotation})`,
+  transformStyle: "preserve-3d",
 });
 export const rotateOffset = style({
   width: `calc(${gridCols} * ${TILE_SIZE} + ${TILE_SIZE})`,
@@ -69,6 +140,7 @@ export const rotateOffset = style({
   left: "50%",
   transform: `translate(-50%, calc(-50% - ${TILE_SIZE} / 2))`,
   position: "absolute",
+  transformStyle: "preserve-3d",
 });
 
 // translation layer - tranlates the grid based on position
@@ -84,6 +156,7 @@ export const translate = style({
     calc(-1 * ${curCol} * ${TILE_SIZE} - ${TILE_SIZE} / 2),
     calc(-1 * ${curRow} * ${TILE_SIZE} - ${TILE_SIZE} / 2)
   )`,
+  transformStyle: "preserve-3d",
 });
 
 // perspective layer - makes it all 3D and junk
@@ -94,6 +167,7 @@ export const perspectiveWrapper = style({
   perspective: "600px",
   top: "50%",
   left: "50%",
+  transformStyle: "preserve-3d",
 });
 
 export const perspective = style({
