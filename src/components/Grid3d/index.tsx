@@ -106,6 +106,50 @@ export function Tile3d({ row, col, type }: TileProps) {
   );
 }
 
+// VisibleGrid - only displays a portion of the grid so we aren't making a bajillion elements
+
+interface VisibleGridProps {
+  curRow: number;
+  curCol: number;
+  grid: Grid;
+  drawDistance: number;
+  cachedDistance: number;
+}
+
+function VisibleGrid({
+  curRow,
+  curCol,
+  grid,
+  drawDistance,
+  cachedDistance,
+}: VisibleGridProps) {
+  const minCol = curCol - drawDistance - cachedDistance;
+  const maxCol = curCol + drawDistance + cachedDistance;
+  const minRow = curRow - drawDistance - cachedDistance;
+  const maxRow = curRow + drawDistance + cachedDistance;
+
+  let tiles: ReactNode[] = [];
+  for (let i = minRow; i < maxRow; i++) {
+    for (let j = minCol; j < maxCol; j++) {
+      if (i < 0 || i >= grid.height || j < 0 || j >= grid.width) {
+        tiles.push(<Tile key={`${i},${j}`} type="wall" row={i} col={j} />);
+      } else {
+        tiles.push(
+          <Tile3d
+            key={`${i},${j}`}
+            type={
+              grid.getCell(i, j).hasPropertyOfType("wall") ? "wall" : "room"
+            }
+            row={i}
+            col={j}
+          />
+        );
+      }
+    }
+  }
+  return <div className={translate}>{tiles}</div>;
+}
+
 // Grid
 
 interface GridProps {
@@ -135,24 +179,24 @@ export function Grid3d({
     [curColVar]: `${curCol}`,
   });
 
-  const tiles = useMemo(() => {
-    const tiles: ReactNode[] = [];
-    for (let i = 0; i < grid.height; i++) {
-      for (let j = 0; j < grid.width; j++) {
-        tiles.push(
-          <Tile3d
-            key={`${i},${j}`}
-            type={
-              grid.getCell(i, j).hasPropertyOfType("wall") ? "wall" : "room"
-            }
-            row={i}
-            col={j}
-          />
-        );
-      }
-    }
-    return tiles;
-  }, [grid]);
+  // const tiles = useMemo(() => {
+  //   const tiles: ReactNode[] = [];
+  //   for (let i = 0; i < grid.height; i++) {
+  //     for (let j = 0; j < grid.width; j++) {
+  //       tiles.push(
+  //         <Tile
+  //           key={`${i},${j}`}
+  //           type={
+  //             grid.getCell(i, j).hasPropertyOfType("wall") ? "wall" : "room"
+  //           }
+  //           row={i}
+  //           col={j}
+  //         />
+  //       );
+  //     }
+  //   }
+  //   return tiles;
+  // }, [grid]);
 
   return (
     <>
@@ -162,9 +206,15 @@ export function Grid3d({
           <div className={perspective}>
             <div className={rotateOffset}>
               <div className={rotate}>
-                <div className={translate}>
-                  <div className={tileWrapper}>{tiles}</div>
-                </div>
+                <VisibleGrid
+                  curCol={curCol}
+                  curRow={curRow}
+                  grid={grid}
+                  drawDistance={3}
+                  cachedDistance={1}
+                />
+                {/* <div className={translate}> */}
+                {/* <div className={tileWrapper}>{tiles}</div> */}
               </div>
             </div>
           </div>

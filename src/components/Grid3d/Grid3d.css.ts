@@ -28,7 +28,7 @@ export const tileWrapper = style({
   width: `calc(${gridCols} * ${TILE_SIZE})`,
   height: `calc(${gridRows} * ${TILE_SIZE})`,
   transformStyle: "preserve-3d",
-  transform: `translateZ(calc(${TILE_SIZE} / 2))`,
+  // transform: `translateZ(calc(${TILE_SIZE} / 2))`,
 });
 
 export const tileRow = createVar();
@@ -152,10 +152,11 @@ export const translate = style({
   position: "absolute",
   top: "50%",
   left: "50%",
-  transform: `translate(
-    calc(-1 * ${curCol} * ${TILE_SIZE} - ${TILE_SIZE} / 2),
-    calc(-1 * ${curRow} * ${TILE_SIZE} - ${TILE_SIZE} / 2)
-  )`,
+  transform: `
+    translateX(calc(-1 * ${curCol} * ${TILE_SIZE} - ${TILE_SIZE} / 2))
+    translateY(calc(-1 * ${curRow} * ${TILE_SIZE} - ${TILE_SIZE} / 2))
+    translateZ(calc(${TILE_SIZE} / 2))
+  `,
   transformStyle: "preserve-3d",
 });
 

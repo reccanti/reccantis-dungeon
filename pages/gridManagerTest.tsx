@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import Head from "next/head";
 import { throttle } from "throttle-typescript";
+import { FpsView } from "react-fps";
 
 import stylesCss from "../styles/Home.module.css";
 import { Grid2d } from "../src/components/Grid2d";
@@ -17,7 +18,7 @@ import {
 } from "../src/components/WeirdLayoutStuffIllProbablyDeleteLater/Layout";
 import { ANIMATION_DURATION } from "../src/components/Grid3d/Grid3d.css";
 
-const GRID_SIZE = 5;
+const GRID_SIZE = 20;
 
 function findEmptyRoom(grid: Grid) {
   while (true) {
@@ -107,6 +108,7 @@ const GridTest: NextPage = () => {
       </Head>
 
       <main className={stylesCss.main}>
+        <FpsView />
         {grid && gridManager && (
           <Layout columns={2}>
             <Column>
