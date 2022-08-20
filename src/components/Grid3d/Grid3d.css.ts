@@ -100,7 +100,8 @@ export const tileFace = recipe({
     height: TILE_SIZE,
     position: "absolute",
     backfaceVisibility: "hidden",
-    border: "1px solid white",
+    imageRendering: "pixelated",
+    // border: "1px solid white",
   },
   variants: {
     opacity: {
@@ -108,41 +109,71 @@ export const tileFace = recipe({
         display: "none",
       },
       opaque: {
-        backgroundColor: "gray",
+        // backgroundColor: "gray",
       },
     },
     direction: {
       front: {
+        backgroundImage: `url(/sprites.png)`,
+        backgroundSize: `
+          calc(${128 / 16} * ${TILE_SIZE})
+          calc(${128 / 16} * ${TILE_SIZE})
+        `,
+        backgroundPosition: `0 0`,
         transform: `
+          rotateY(-180deg)
           rotateX(90deg)
           translateZ(calc(${TILE_SIZE} / 2))
         `,
       },
       back: {
+        backgroundImage: `url(/sprites.png)`,
+        backgroundSize: `
+          calc(${128 / 16} * ${TILE_SIZE})
+          calc(${128 / 16} * ${TILE_SIZE})
+        `,
+        backgroundPosition: `0 0`,
         transform: `
+          rotateY(0deg)
           rotateX(-90deg)
           translateZ(calc(${TILE_SIZE} / 2))
         `,
       },
       left: {
+        backgroundImage: `url(/sprites.png)`,
+        backgroundSize: `
+          calc(${128 / 16} * ${TILE_SIZE})
+          calc(${128 / 16} * ${TILE_SIZE})
+        `,
+        backgroundPosition: `0 0`,
         transform: `
+          rotateX(-90deg)
           rotateY(90deg)
           translateZ(calc(${TILE_SIZE} / 2))
         `,
       },
       right: {
+        backgroundImage: `url(/sprites.png)`,
+        backgroundSize: `
+          calc(${128 / 16} * ${TILE_SIZE})
+          calc(${128 / 16} * ${TILE_SIZE})
+        `,
+        backgroundPosition: `0 0`,
         transform: `
+          rotateX(-90deg)
           rotateY(270deg)
           translateZ(calc(${TILE_SIZE} / 2))
         `,
       },
       top: {
+        backgroundColor: "black",
         transform: `
           rotateX(180deg)
           translateZ(calc(-${TILE_SIZE} / 2))
         `,
       },
       bottom: {
+        backgroundColor: "black",
         transform: `
           rotateX(0deg)
           translateZ(calc(-${TILE_SIZE} / 2))
