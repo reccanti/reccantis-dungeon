@@ -114,6 +114,8 @@ const GridTest: NextPage = () => {
             <Column>
               <Box>
                 <Grid3d
+                  width={750}
+                  height={750}
                   grid={grid}
                   curRow={row}
                   curCol={col}

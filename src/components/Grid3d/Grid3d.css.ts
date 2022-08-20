@@ -4,7 +4,7 @@ import { recipe } from "@vanilla-extract/recipes";
 // constants
 
 const TILE_SIZE = "50px";
-export const ANIMATION_DURATION = 300;
+export const ANIMATION_DURATION = 400;
 
 // viewport layer - the frame that "displays" the 3D grid
 
@@ -76,7 +76,7 @@ export const tileFace = recipe({
         display: "none",
       },
       opaque: {
-        backgroundColor: "black",
+        backgroundColor: "gray",
       },
     },
     direction: {
@@ -192,4 +192,41 @@ export const centerIndicator = style({
   top: `calc(${viewportHeight} / 2)`,
   transform: "translate(-50%, -50%)",
   zIndex: 1000,
+});
+
+// Fog of War - make things dimmer
+
+export const fowStart = createVar();
+export const fowDistance = createVar();
+export const fowDensity = createVar();
+
+export const fogOfWarContainer = style({
+  display: "inline-block",
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transformStyle: "preserve-3d",
+  transform: `
+    rotate(180deg)
+    translate3d(
+      calc(50%), 
+      calc(${fowStart} * ${TILE_SIZE} + 50% + ${TILE_SIZE} + (${fowDistance} - 1) * ${TILE_SIZE} / 2), 
+      calc(${TILE_SIZE} / 2)
+    )
+  `,
+});
+
+export const fogOfWarWrapper = style({
+  height: `calc(${TILE_SIZE} / ${fowDensity})`,
+  transformStyle: "preserve-3d",
+});
+
+export const fogOfWar = style({
+  width: `calc(${TILE_SIZE} * 4)`,
+  height: TILE_SIZE,
+  // borderBottom: "2px solid red",
+
+  backgroundColor: "black",
+  opacity: "15%",
+  transform: "rotateX(-90deg)",
 });

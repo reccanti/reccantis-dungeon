@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useReducer } from "react";
+import { ReactNode, useEffect, useMemo, useReducer } from "react";
 
 import {
   // viewport stuff
@@ -31,6 +31,14 @@ import {
   // perspective stuff
   perspective,
   perspectiveWrapper,
+
+  // fog of war
+  fowStart,
+  fowDistance,
+  fowDensity,
+  fogOfWar,
+  fogOfWarWrapper,
+  fogOfWarContainer,
 
   // utils
   centerIndicator,
@@ -143,10 +151,10 @@ function tileReducer(state: TileCache, action: TileReducerActions) {
             newState[key] = state[key];
           } else {
             if (i < 0 || i >= grid.height || j < 0 || j >= grid.width) {
-              newState[key] = <Tile key={key} type="wall" row={i} col={j} />;
+              newState[key] = <Tile3d key={key} type="wall" row={i} col={j} />;
             } else {
               newState[key] = (
-                <Tile
+                <Tile3d
                   key={key}
                   type={
                     grid.getCell(i, j).hasPropertyOfType("wall")
@@ -227,6 +235,32 @@ function VisibleGrid({
   return <div className={translate}>{tiles}</div>;
 }
 
+// Fog of War
+
+interface FogOfWarProps {
+  offset: number;
+  distance: number;
+  density: number;
+}
+
+function FogOfWar({ offset, distance, density }: FogOfWarProps) {
+  const style = assignInlineVars({
+    [fowStart]: `${offset}`,
+    [fowDistance]: `${distance}`,
+    [fowDensity]: `${density}`,
+  });
+
+  return (
+    <div className={fogOfWarContainer} style={style}>
+      {Array.from({ length: density * distance }).map((_, i) => (
+        <div key={i} className={fogOfWarWrapper}>
+          <div className={fogOfWar} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // Grid
 
 interface GridProps {
@@ -256,26 +290,31 @@ export function Grid3d({
     [curColVar]: `${curCol}`,
   });
 
+  const fow = useMemo(
+    () => <FogOfWar density={8} distance={2} offset={0} />,
+    []
+  );
+
   return (
     <>
       <div className={viewport} style={style}>
-        <div className={centerIndicator}></div>
-        {/* <div className={perspectiveWrapper}>
-          <div className={perspective}> */}
-
-        <div className={rotateOffset}>
-          <div className={rotate}>
-            <VisibleGrid
-              curCol={curCol}
-              curRow={curRow}
-              grid={grid}
-              drawDistance={2}
-              cachedDistance={1}
-            />
+        {/* <div className={centerIndicator}></div> */}
+        <div className={perspectiveWrapper}>
+          <div className={perspective}>
+            {fow}
+            <div className={rotateOffset}>
+              <div className={rotate}>
+                <VisibleGrid
+                  curCol={curCol}
+                  curRow={curRow}
+                  grid={grid}
+                  drawDistance={3}
+                  cachedDistance={1}
+                />
+              </div>
+            </div>
           </div>
         </div>
-        {/* </div>
-        </div> */}
       </div>
     </>
   );
