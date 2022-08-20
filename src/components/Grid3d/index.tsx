@@ -4,7 +4,14 @@ import {
   // viewport stuff
   viewportHeight,
   viewportWidth,
+  baseHeight,
+  baseWidth,
   viewport,
+
+  // scale stuff
+  scaleFactorX,
+  scaleFactorY,
+  scale,
 
   // tile stuff
   tile,
@@ -263,6 +270,8 @@ function FogOfWar({ offset, distance, density }: FogOfWarProps) {
 
 // Grid
 
+const BASE_SIZE = 500;
+
 interface GridProps {
   width?: number;
   height?: number;
@@ -283,6 +292,10 @@ export function Grid3d({
   const style = assignInlineVars({
     [viewportHeight]: `${height}px`,
     [viewportWidth]: `${width}px`,
+    [baseHeight]: `${BASE_SIZE}px`,
+    [baseWidth]: `${BASE_SIZE}px`,
+    [scaleFactorX]: `${width / BASE_SIZE}`,
+    [scaleFactorY]: `${height / BASE_SIZE}`,
     [rotation]: `${orientation}deg`,
     [gridRows]: `${grid.height}`,
     [gridCols]: `${grid.width}`,
@@ -299,18 +312,20 @@ export function Grid3d({
     <>
       <div className={viewport} style={style}>
         {/* <div className={centerIndicator}></div> */}
-        <div className={perspectiveWrapper}>
-          <div className={perspective}>
-            {fow}
-            <div className={rotateOffset}>
-              <div className={rotate}>
-                <VisibleGrid
-                  curCol={curCol}
-                  curRow={curRow}
-                  grid={grid}
-                  drawDistance={3}
-                  cachedDistance={1}
-                />
+        <div className={scale}>
+          <div className={perspectiveWrapper}>
+            <div className={perspective}>
+              {fow}
+              <div className={rotateOffset}>
+                <div className={rotate}>
+                  <VisibleGrid
+                    curCol={curCol}
+                    curRow={curRow}
+                    grid={grid}
+                    drawDistance={3}
+                    cachedDistance={1}
+                  />
+                </div>
               </div>
             </div>
           </div>

@@ -4,6 +4,7 @@ import { recipe } from "@vanilla-extract/recipes";
 // constants
 
 const TILE_SIZE = "50px";
+const VIEWPORT_BASE_SIZE = "500px";
 export const ANIMATION_DURATION = 400;
 
 // viewport layer - the frame that "displays" the 3D grid
@@ -11,11 +12,42 @@ export const ANIMATION_DURATION = 400;
 export const viewportWidth = createVar();
 export const viewportHeight = createVar();
 
+export const baseWidth = createVar();
+export const baseHeight = createVar();
+
 export const viewport = style({
   width: viewportWidth,
   height: viewportHeight,
   overflow: "hidden",
   position: "relative",
+});
+
+// scale layer
+
+export const scaleFactorX = createVar();
+export const scaleFactorY = createVar();
+
+export const scale = style({
+  width: `${baseWidth}`,
+  height: `${baseHeight}`,
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transformStyle: "preserve-3d",
+  transform: `
+    translate(-50%, -50%)
+    scale(
+       ${scaleFactorX},
+       ${scaleFactorY}
+    )
+  `,
+  // transform: `
+  //   scale(
+  //     calc(${viewportWidth} / ${VIEWPORT_BASE_SIZE}),
+  //     calc(${viewportWidth} / ${VIEWPORT_BASE_SIZE})
+  //   )
+  // `,
+  overflow: "hidden",
 });
 
 // tiles!

@@ -63,6 +63,7 @@ const GridTest: NextPage = () => {
 
       window.addEventListener("keydown", listen);
       setGridManager(manager);
+      setOrientation(180);
       setCol(manager.col);
       setRow(manager.row);
 
