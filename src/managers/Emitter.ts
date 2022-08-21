@@ -14,7 +14,7 @@ export class Emitter {
   addListener(cb: EventCallback) {
     this.callbacks.add(cb);
   }
-  removeListner(cb: EventCallback) {
+  removeListener(cb: EventCallback) {
     this.callbacks.delete(cb);
   }
 }

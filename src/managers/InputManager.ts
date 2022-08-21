@@ -1,6 +1,9 @@
-import { Emitter } from "./Emitter";
+import { throttle } from "throttle-typescript";
 
-export class InputManager {
+import { Emitter } from "./Emitter";
+import { Manager } from "./MangerInterface";
+
+export class InputManager implements Manager {
   listen: (event: KeyboardEvent) => void;
 
   constructor(emitter: Emitter) {

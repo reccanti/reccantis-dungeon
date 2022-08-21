@@ -1,7 +1,8 @@
 // import {Events} from './Events'
 import { Emitter } from "./Emitter";
+import { Manager } from "./MangerInterface";
 
-export class TestManager {
+export class TestManager implements Manager {
   listen: Parameters<Emitter["addListener"]>[0];
   emitter: Emitter;
 
@@ -33,6 +34,6 @@ export class TestManager {
   }
 
   cleanup() {
-    this.emitter.removeListner(this.listen);
+    this.emitter.removeListener(this.listen);
   }
 }

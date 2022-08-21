@@ -1,14 +1,18 @@
 import { Emitter } from "./Emitter";
+import { Manager } from "./MangerInterface";
 import { InputManager } from "./InputManager";
 import { TestManager } from "./TestManager";
 
 export function init() {
   const emitter = new Emitter();
-  const inputManager = new InputManager(emitter);
-  const testManager = new TestManager(emitter);
+
+  const managers: Manager[] = [];
+  managers.push(new InputManager(emitter));
+  managers.push(new TestManager(emitter));
 
   return () => {
-    inputManager.cleanup();
-    testManager.cleanup();
+    managers.forEach((manager) => {
+      manager.cleanup();
+    });
   };
 }
