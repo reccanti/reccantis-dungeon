@@ -228,7 +228,7 @@ export const translate = style({
 export const perspectiveWrapper = style({
   imageRendering: "crisp-edges",
   position: "absolute",
-  perspective: "600px",
+  perspective: "585px",
   top: "50%",
   left: "50%",
   transformStyle: "preserve-3d",

@@ -311,7 +311,7 @@ export function Grid3d({
   return (
     <>
       <div className={viewport} style={style}>
-        {/* <div className={centerIndicator}></div> */}
+        <div className={centerIndicator}></div>
         <div className={scale}>
           <div className={perspectiveWrapper}>
             <div className={perspective}>
