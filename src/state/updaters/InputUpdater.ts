@@ -8,7 +8,6 @@ import {
   inputRight,
   inputDebug,
 } from "../Input";
-import { setDebugMode } from "../Modes";
 
 export const InputUpdater: Updater = (store) => {
   const listen = (event: KeyboardEvent) => {
@@ -34,10 +33,8 @@ export const InputUpdater: Updater = (store) => {
         break;
       }
       case "Escape": {
-        const {
-          modes: { debug },
-        } = store.getState();
-        store.dispatch(setDebugMode(!debug));
+        store.dispatch(inputDebug());
+        break;
       }
     }
   };

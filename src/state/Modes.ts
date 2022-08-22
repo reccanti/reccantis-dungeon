@@ -1,4 +1,5 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
+import { inputDebug } from "./Input";
 
 export const setDebugMode = createAction<boolean>("mode/debug");
 
@@ -7,7 +8,11 @@ const initialState = {
 };
 
 export const reducer = createReducer(initialState, (builder) => {
-  builder.addCase(setDebugMode, (state, action) => {
-    state.debug = action.payload;
-  });
+  builder
+    .addCase(setDebugMode, (state, action) => {
+      state.debug = action.payload;
+    })
+    .addCase(inputDebug, (state) => {
+      state.debug = !state.debug;
+    });
 });

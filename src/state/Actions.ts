@@ -6,6 +6,6 @@ const initialState: AnyAction[] = [];
 
 export const reducer = createReducer(initialState, (builder) => {
   builder.addCase(logAction, (state, action) => {
-    state.unshift(action);
+    state.unshift(action.payload);
   });
 });
