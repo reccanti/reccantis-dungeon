@@ -13,4 +13,5 @@ export const column = style({
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
+  gridColumn: columns,
 });
