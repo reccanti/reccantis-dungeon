@@ -1,6 +1,6 @@
-import { cell } from "./components/Grid/Grid.css";
+import { cell } from "../components/Grid/Grid.css";
 import { Cell, Grid } from "./grid";
-import { shuffle } from "./util/shuffle";
+import { shuffle } from "../util/shuffle";
 /**
  * The maze generator!
  */

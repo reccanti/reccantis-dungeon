@@ -1,3 +1,4 @@
+import { Direction } from "../direction";
 import { Cell } from "../grid";
 
 describe("Cell", () => {
@@ -27,7 +28,7 @@ describe("Cell", () => {
   it("lets you get the properties of a cell", () => {
     const wall1 = { type: "wall" } as const;
     const wall2 = { type: "wall" } as const;
-    const player = { type: "player", orientation: "up" } as const;
+    const player = { type: "player", direction: Direction.Up } as const;
 
     const cell = new Cell();
     cell.addProperty(wall1);

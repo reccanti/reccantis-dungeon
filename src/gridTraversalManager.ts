@@ -1,4 +1,4 @@
-import { Grid, Cell } from "./grid";
+import { Grid, Cell } from "./entities/grid";
 
 export type Orientation = "up" | "down" | "left" | "right";
 

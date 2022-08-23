@@ -6,7 +6,7 @@ export function init(storeInstance: typeof store) {
   const updaters = Object.values(updaterModule) as Updater[];
   const cleanups = updaters.map((updater) => updater(storeInstance));
 
-  return () => {
+  const cleanup = () => {
     cleanups.forEach((cleanup) => {
       cleanup();
     });

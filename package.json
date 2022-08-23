@@ -20,7 +20,8 @@
     "react-dom": "18.2.0",
     "react-fps": "^1.0.6",
     "react-redux": "^8.0.2",
-    "throttle-typescript": "^1.1.0"
+    "throttle-typescript": "^1.1.0",
+    "ts-key-enum": "^2.0.12"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",

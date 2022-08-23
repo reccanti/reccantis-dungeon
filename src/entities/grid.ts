@@ -1,5 +1,7 @@
 // Cell Properties
 
+import { Direction } from "./direction";
+
 interface CellProperty {
   type: string;
 }
@@ -8,7 +10,7 @@ interface Wall extends CellProperty {
 }
 interface Player extends CellProperty {
   type: "player";
-  orientation: "up" | "down" | "left" | "right";
+  direction: Direction;
 }
 export type Property = Wall | Player;
 

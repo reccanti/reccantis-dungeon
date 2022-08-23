@@ -1,25 +1,32 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { useEffect, ReactNode } from "react";
-import { Provider, useSelector, useStore } from "react-redux";
+import { useEffect, ReactNode, useState } from "react";
 
-import { store, State, Store } from "../src/state";
-import { init } from "../src/init";
-import { EnhancedStore } from "@reduxjs/toolkit";
+import { init } from "../src/logic";
 import { StoreDebugger } from "../src/components/StateDebug";
+import { State } from "../src/logic/GameLogic";
 
 function Layout({ children }: { children: ReactNode }) {
-  const debug = useSelector<State>((state) => state.modes.debug);
-  const store = useStore<Store>();
-
+  const [debug, setDebug] = useState<boolean>(false);
+  const [state, setState] = useState<State | null>();
   useEffect(() => {
-    const cleanup = init(store as EnhancedStore);
-    return () => cleanup();
-  }, [store]);
+    const { logic, cleanup: cleanupInit } = init();
+    setDebug(logic.getState().modes.debug);
+
+    const cleanupDebug = logic.addListener((state) => {
+      setDebug(state.modes.debug);
+      setState(state);
+    });
+
+    return () => {
+      cleanupInit();
+      cleanupDebug();
+    };
+  }, []);
 
   return (
     <>
-      {debug && <StoreDebugger />}
+      {debug && state && <StoreDebugger state={state} />}
       {children}
     </>
   );
@@ -27,11 +34,9 @@ function Layout({ children }: { children: ReactNode }) {
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Provider store={store}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </Provider>
+    <Layout>
+      <Component {...pageProps} />
+    </Layout>
   );
 }
 
