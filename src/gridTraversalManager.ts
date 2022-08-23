@@ -1,3 +1,4 @@
+import { Direction } from "./entities/direction";
 import { Grid, Cell } from "./entities/grid";
 
 export type Orientation = "up" | "down" | "left" | "right";
@@ -200,9 +201,24 @@ export class GridTraversalManager {
     // this.grid.setCell(this.row, this.col, new Cell("player"));
     const cell = this.grid.getCell(this.row, this.col);
     const curPlayerProps = cell.getPropertiesOfType("player");
+    let direction: Direction;
+    switch (this.orientation) {
+      case "up":
+        direction = Direction.Up;
+        break;
+      case "down":
+        direction = Direction.Down;
+        break;
+      case "left":
+        direction = Direction.Left;
+        break;
+      case "right":
+        direction = Direction.Right;
+        break;
+    }
     cell.addProperty({
       type: "player",
-      orientation: this.orientation,
+      direction,
     });
     curPlayerProps.forEach((prop) => {
       cell.removeProperty(prop);

@@ -6,10 +6,10 @@ import { FpsView } from "react-fps";
 import stylesCss from "../styles/Home.module.css";
 import { Grid2d } from "../src/components/Grid2d";
 import { Grid3d } from "../src/components/Grid3d";
-import { PrimMaze, primMazeToGrid } from "../src/primMaze";
+import { PrimMaze, primMazeToGrid } from "../src/entities/primMaze";
 import { useEffect, useMemo, useState } from "react";
 import { GridTraversalManager, Orientation } from "../src/gridTraversalManager";
-import { Grid } from "../src/grid";
+import { Grid } from "../src/entities/grid";
 import { randomInRange } from "../src/util/randomInRange";
 import { Box } from "../src/components/WeirdLayoutStuffIllProbablyDeleteLater/Box";
 import {

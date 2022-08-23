@@ -1,32 +1,30 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import { useEffect, ReactNode, useState } from "react";
-
-import { init } from "../src/logic";
 import { StoreDebugger } from "../src/components/StateDebug";
-import { State } from "../src/logic/GameLogic";
+import {
+  GameLogicProvider,
+  useGameLogic,
+} from "../src/components/GameLogicProvider";
 
 function Layout({ children }: { children: ReactNode }) {
-  const [debug, setDebug] = useState<boolean>(false);
-  const [state, setState] = useState<State | null>();
-  useEffect(() => {
-    const { logic, cleanup: cleanupInit } = init();
-    setDebug(logic.getState().modes.debug);
+  const logic = useGameLogic();
+  const [debug, setDebug] = useState(logic.getState().modes.debug);
+  const [state, setState] = useState(logic.getState());
 
-    const cleanupDebug = logic.addListener((state) => {
+  useEffect(() => {
+    const cleanup = logic.addListener((state) => {
       setDebug(state.modes.debug);
       setState(state);
     });
-
     return () => {
-      cleanupInit();
-      cleanupDebug();
+      cleanup();
     };
-  }, []);
+  }, [logic]);
 
   return (
     <>
-      {debug && state && <StoreDebugger state={state} />}
+      {debug && <StoreDebugger state={state} />}
       {children}
     </>
   );
@@ -34,9 +32,11 @@ function Layout({ children }: { children: ReactNode }) {
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Layout>
-      <Component {...pageProps} />
-    </Layout>
+    <GameLogicProvider>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </GameLogicProvider>
   );
 }
 

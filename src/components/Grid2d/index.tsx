@@ -2,9 +2,10 @@ import { useMemo } from "react";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
 
 import { partition } from "../../util/partition";
-import { Grid, Cell, Property } from "../../grid";
+import { Grid, Cell, Property } from "../../entities/grid";
 import { row as rowStyle, cell as cellStyle, cellSize } from "./Grid2d.css";
 import { useEffect, useState } from "react";
+import { Direction } from "../../entities/direction";
 
 type StyleType = ReturnType<typeof assignInlineVars>;
 
@@ -31,12 +32,29 @@ function RoomTile({ style }: { style: StyleType }) {
 }
 
 function PlayerTile({
-  orientation,
+  direction,
   style,
 }: {
-  orientation: "up" | "down" | "left" | "right";
+  direction: Direction;
   style: StyleType;
 }) {
+  console.log(direction);
+  let orientation: "up" | "down" | "left" | "right";
+  switch (direction) {
+    case Direction.Up:
+      orientation = "up";
+      break;
+    case Direction.Down:
+      orientation = "down";
+      break;
+    case Direction.Left:
+      orientation = "left";
+      break;
+    case Direction.Right:
+      orientation = "right";
+      break;
+  }
+  console.log(orientation);
   return (
     <div
       className={cellStyle({
@@ -86,7 +104,7 @@ function Tile({ cell, size }: { cell: Cell; size: number }) {
   if (!property) {
     return <RoomTile style={style} />;
   } else if (property.type === "player") {
-    return <PlayerTile style={style} orientation={property.orientation} />;
+    return <PlayerTile style={style} direction={property.direction} />;
   } else {
     return <WallTile style={style} />;
   }

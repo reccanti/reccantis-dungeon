@@ -1,5 +1,5 @@
 import { GameLogic } from "./GameLogic";
-import { InputListener } from "./inputListener";
+import { InputListener } from "./InputListener";
 
 export function debugAdapter(logic: GameLogic, inputs: InputListener) {
   const cleanup = inputs.addListener((event) => {

@@ -51,7 +51,7 @@ import {
   centerIndicator,
 } from "./Grid3d.css";
 import { assignInlineVars } from "@vanilla-extract/dynamic";
-import { Grid } from "../../grid";
+import { Grid } from "../../entities/grid";
 
 // Tile
 
@@ -235,7 +235,7 @@ function VisibleGrid({
       drawDistance,
       cachedDistance,
     });
-  }, [grid, curRow, curCol]);
+  }, [grid, curRow, curCol, cachedDistance, drawDistance]);
 
   const tiles = getVisibleTilesFromCache(cache, curRow, curCol, drawDistance);
 

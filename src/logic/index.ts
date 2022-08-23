@@ -1,8 +1,8 @@
 import { GameLogic } from "./GameLogic";
-import { InputListener } from "./inputListener";
+import { InputListener } from "./InputListener";
 
 import { debugAdapter } from "./debugAdapter";
-import { exploreAdapter } from "./ExploreAdapter";
+import { exploreAdapter } from "./exploreAdapter";
 
 export function init() {
   const logic = new GameLogic();
